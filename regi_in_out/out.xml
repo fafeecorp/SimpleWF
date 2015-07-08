@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Model>
+  <UserInput id="ui"/>
+  <Constants>
+    <Constant id="c1" type="string" value="valami"/>
+    <Constant id="c2" type="number" value="123456"/>
+    <Constant id="c3" type="number" value="789012"/>
+  </Constants>
+  <DocumentTypes>
+    <DocumentType id="d1" name="Doc1">
+      <Attribute name="Doc1Attr1" type="string"/>
+      <Attribute name="Doc1Attr2" type="string"/>
+      <Attribute name="Doc1Attr3" type="number"/>
+      <Attribute name="Doc1Attr4" type="number"/>
+    </DocumentType>
+  </DocumentTypes>
+  <Nodes>
+    <Node dt="d1" id="n1" name="Node1">
+      <Param source="ui"/>
+      <Param source="c1"/>
+      <Param source="ui"/>
+      <Param source="c2"/>
+    </Node>
+    <Node dt="d1" id="n2" name="Node2">
+      <Param source="c1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="3" source="n1"/>
+      <Param source="ui"/>
+    </Node>
+    <Node dt="d1" id="n3" name="Node3">
+      <Param attrib="1" source="n1"/>
+      <Param source="ui"/>
+      <Param attrib="3" source="n1"/>
+      <Param attrib="4" source="n2"/>
+    </Node>
+    <Node dt="d1" id="n4" name="Node3">
+      <Param source="ui"/>
+      <Param attrib="2" source="n3"/>
+      <Param source="ui"/>
+      <Param source="c3"/>
+    </Node>
+  </Nodes>
+  <Links>
+    <Link source="n1" target="n2">
+      <true/>
+    </Link>
+    <Link source="n1" target="n3">
+      <and>
+        <gt>
+          <var attrib="3"/>
+          <const value="10"/>
+        </gt>
+        <lt>
+          <var attrib="4"/>
+          <var attrib="3"/>
+        </lt>
+      </and>
+    </Link>
+    <Link source="n2" target="n4">
+      <eq>
+        <var attrib="2"/>
+        <const value="abc"/>
+      </eq>
+    </Link>
+    <Link source="n3" target="n4">
+      <or>
+        <neq>
+          <var attrib="2"/>
+          <const value="bcd"/>
+        </neq>
+        <lt>
+          <var attrib="4"/>
+          <const value="42"/>
+        </lt>
+      </or>
+    </Link>
+  </Links>
+</Model>

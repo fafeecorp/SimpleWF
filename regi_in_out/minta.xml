@@ -1,0 +1,77 @@
+<Model>
+  <UserInput id = "ui"/>
+  <Constants>
+    <Constant id = "c1" value = "valami" type = "string"/>
+    <Constant id = "c2" value = "123456" type = "number"/>
+    <Constant id = "c3" value = "789012" type = "number"/>
+  </Constants>
+  <DocumentTypes>
+    <DocumentType id = "d1" name = "Doc1">
+      <Attribute name = "Doc1Attr1" type = "string"/>
+      <Attribute name = "Doc1Attr2" type = "string"/>
+      <Attribute name = "Doc1Attr3" type = "number"/>
+      <Attribute name = "Doc1Attr4" type = "number"/>
+    </DocumentType>
+  </DocumentTypes>
+  <Nodes>
+  <Node id = "n1" name = "Node1" dt = "d1">
+      <Param source = "ui" />
+      <Param source = "c1" />
+      <Param source = "ui" />
+      <Param source = "c2" />
+    </Node>
+    <Node id = "n2" name = "Node2" dt = "d1">
+      <Param source = "c1" />
+      <Param source = "n1" attrib = "1"/>
+      <Param source = "n1" attrib = "4"/>
+      <Param source = "ui" />
+    </Node>
+    <Node id = "n3" name = "Node3" dt = "d1">
+      <Param source = "n1" attrib = "2"/>
+      <Param source = "ui" />
+      <Param source = "n1" attrib = "4"/>
+      <Param source = "n2" attrib = "4"/>
+    </Node>
+    <Node id = "n4" name = "Node3" dt = "d1">
+      <Param source = "ui" />
+      <Param source = "n3" attrib = "2"/>
+      <Param source = "ui" />
+      <Param source = "c3" />
+    </Node>
+  </Nodes>
+  <Links>
+    <Link source = "n1" target = "n2">
+	  <true/>
+	</Link>
+    <Link source = "n1" target = "n3">
+	  <and>
+	    <gt>
+		  <var attrib = "3" />
+		  <const value = "10" />
+		</gt>
+		<lt>
+		  <var attrib = "4" />
+		  <var attrib = "3" />
+		</lt>
+	  </and>
+    </Link>
+	<Link source = "n2" target = "n4">
+	  <eq>
+	    <var attrib = "2" />
+		<const value = "abc" />
+	  </eq>
+    </Link>
+	<Link source = "n3" target = "n4">
+	  <or>
+	    <neq>
+		  <var attrib = "2" />
+		  <const value = "bcd" />
+		</neq>
+		<lt>
+		  <var attrib = "4" />
+		  <const value = "42" />
+		</lt>
+	  </or>
+    </Link>
+  </Links>
+</Model>

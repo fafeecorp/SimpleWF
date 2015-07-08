@@ -1,0 +1,133 @@
+<Model>
+  <UserInput id = "ui"/>
+  <Constants>
+    <Constant id = "c1" value = "Time of arrival function" type = "string"/>
+  </Constants>
+  <DocumentTypes>
+    <DocumentType id = "d1" name = "Registration">
+      <Attribute name = "Partner" type = "string"/>
+      <Attribute name = "Order number" type = "string"/>
+      <Attribute name = "ETA" type = "string"/>
+      <Attribute name = "Conveyor firm" type = "string"/>
+      <Attribute name = "Quality" type = "string"/>
+      <Attribute name = "Plate number" type = "string"/>
+      <Attribute name = "Comments" type = "string"/>
+      <Attribute name = "Name of driver" type = "string"/>
+      <Attribute name = "Driver phone" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d2" name = "Arrived">
+      <Attribute name = "Plate number" type = "string"/>
+      <Attribute name = "Time of arrival" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d3" name = "DocumentsOk">
+      <Attribute name = "Plate number" type = "string"/>
+      <Attribute name = "Quality" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d4" name = "NotArrived">
+      <Attribute name = "Partner" type = "string"/>
+      <Attribute name = "Order number" type = "string"/>
+      <Attribute name = "Driver phone" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d5" name = "TruckOk">
+      <Attribute name = "Order number" type = "string"/>
+      <Attribute name = "Completed" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d6" name = "MissingDoc">
+      <Attribute name = "Conveyor firm" type = "string"/>
+      <Attribute name = "Order number" type = "string"/>
+      <Attribute name = "Plate number" type = "string"/>
+      <Attribute name = "Missing" type = "string"/>
+    </DocumentType>
+    <DocumentType id = "d7" name = "BadTruck">
+      <Attribute name = "Conveyor firm" type = "string"/>
+      <Attribute name = "Order number" type = "string"/>
+      <Attribute name = "Quality" type = "string"/>
+    </DocumentType>
+  </DocumentTypes>
+  <Nodes>
+    <Node id = "n1" name = "SCH" dt = "d1">
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+      <Param source = "ui" />
+    </Node>
+    <Node id = "n2" name = "WPA" dt = "d2">
+      <Param source = "n1" attrib = "6" />
+      <Param source = "c1" />
+    </Node>
+    <Node id = "n3" name = "SCH error" dt = "d4">
+      <Param source = "n1" attrib = "1" />
+      <Param source = "n1" attrib = "2" />
+      <Param source = "n1" attrib = "9" />
+    </Node>
+    <Node id = "n4" name = "INC" dt = "d3">
+      <Param source = "n1" attrib = "6" />
+      <Param source = "n1" attrib = "5" />
+    </Node>
+    <Node id = "n5" name = "WPA error" dt = "d6">
+      <Param source = "n1" attrib = "4" />
+      <Param source = "n1" attrib = "2" />
+      <Param source = "n1" attrib = "6" />
+    </Node>
+    <Node id = "n6" name = "CUR" dt = "d5">
+      <Param source = "n1" attrib = "2" />
+      <Param source = "ui" />
+    </Node>
+    <Node id = "n7" name = "INC error" dt = "d7">
+      <Param source = "n1" attrib = "4" />
+      <Param source = "n1" attrib = "2" />
+      <Param source = "n1" attrib = "5" />
+    </Node>
+    <Node id = "n8" name = "DEP" dt = "d1">
+      <Param source = "n1" attrib = "1" />
+      <Param source = "n1" attrib = "2" />
+      <Param source = "n1" attrib = "3" />
+      <Param source = "n1" attrib = "4" />
+      <Param source = "n1" attrib = "5" />
+      <Param source = "n1" attrib = "6" />
+      <Param source = "n1" attrib = "7" />
+      <Param source = "n1" attrib = "8" />
+      <Param source = "n1" attrib = "9" />
+    </Node>
+  </Nodes>
+  <Links>
+    <Link source = "n1" target = "n2">
+      <and>
+	    <gt>
+		  <var attrib = "3" />
+		  <const value = "Huha" />
+		</gt>
+		<lt>
+		  <var attrib = "4" />
+		  <var attrib = "3" />
+		</lt>
+	  </and>
+    </Link>
+    <Link source = "n1" target = "n3">
+      <eq>
+	    <var attrib = "2" />
+		<const value = "abc" />
+	  </eq>
+    </Link>
+    <Link source = "n2" target = "n4">
+      <true />
+    </Link>
+    <Link source = "n2" target = "n5">
+      <true />
+    </Link>
+    <Link source = "n4" target = "n6">
+      <true />
+    </Link>
+    <Link source = "n4" target = "n7">
+      <true />
+    </Link>
+    <Link source = "n6" target = "n8">
+      <true />
+    </Link>
+  </Links>
+</Model>

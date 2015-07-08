@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Model>
+  <UserInput id="ui"/>
+  <Constants>
+    <Constant id="c1" type="string" value="Time of arrival function"/>
+  </Constants>
+  <DocumentTypes>
+    <DocumentType id="d1" name="Registration">
+      <Attribute name="Partner" type="string"/>
+      <Attribute name="Order number" type="string"/>
+      <Attribute name="ETA" type="string"/>
+      <Attribute name="Conveyor firm" type="string"/>
+      <Attribute name="Quality" type="string"/>
+      <Attribute name="Plate number" type="string"/>
+      <Attribute name="Comments" type="string"/>
+      <Attribute name="Name of driver" type="string"/>
+      <Attribute name="Driver phone" type="string"/>
+    </DocumentType>
+    <DocumentType id="d2" name="Arrived">
+      <Attribute name="Plate number" type="string"/>
+      <Attribute name="Time of arrival" type="string"/>
+    </DocumentType>
+    <DocumentType id="d3" name="DocumentsOk">
+      <Attribute name="Plate number" type="string"/>
+      <Attribute name="Quality" type="string"/>
+    </DocumentType>
+    <DocumentType id="d4" name="NotArrived">
+      <Attribute name="Partner" type="string"/>
+      <Attribute name="Order number" type="string"/>
+      <Attribute name="Driver phone" type="string"/>
+    </DocumentType>
+    <DocumentType id="d5" name="TruckOk">
+      <Attribute name="Order number" type="string"/>
+      <Attribute name="Completed" type="string"/>
+    </DocumentType>
+    <DocumentType id="d6" name="MissingDoc">
+      <Attribute name="Conveyor firm" type="string"/>
+      <Attribute name="Order number" type="string"/>
+      <Attribute name="Plate number" type="string"/>
+      <Attribute name="Missing" type="string"/>
+    </DocumentType>
+    <DocumentType id="d7" name="BadTruck">
+      <Attribute name="Conveyor firm" type="string"/>
+      <Attribute name="Order number" type="string"/>
+      <Attribute name="Quality" type="string"/>
+    </DocumentType>
+  </DocumentTypes>
+  <Nodes>
+    <Node dt="d1" id="n1" name="SCH">
+      <Param attrib="1" source="n1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="3" source="n1"/>
+      <Param attrib="4" source="n1"/>
+      <Param attrib="5" source="n1"/>
+      <Param attrib="6" source="n1"/>
+      <Param attrib="7" source="n1"/>
+      <Param attrib="8" source="n1"/>
+      <Param attrib="9" source="n1"/>
+    </Node>
+    <Node dt="d2" id="n2" name="WPA">
+      <Param attrib="6" source="n1"/>
+      <Param source="c1"/>
+    </Node>
+    <Node dt="d4" id="n3" name="SCH error">
+      <Param attrib="1" source="n1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="9" source="n1"/>
+    </Node>
+    <Node dt="d3" id="n4" name="INC">
+      <Param attrib="6" source="n1"/>
+      <Param attrib="5" source="n1"/>
+    </Node>
+    <Node dt="d6" id="n5" name="WPA error">
+      <Param attrib="4" source="n1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="6" source="n1"/>
+      <Param/>
+    </Node>
+    <Node dt="d5" id="n6" name="CUR">
+      <Param attrib="2" source="n1"/>
+      <Param source="ui"/>
+    </Node>
+    <Node dt="d7" id="n7" name="INC error">
+      <Param attrib="4" source="n1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="5" source="n1"/>
+    </Node>
+    <Node dt="d1" id="n8" name="DEP">
+      <Param attrib="1" source="n1"/>
+      <Param attrib="2" source="n1"/>
+      <Param attrib="3" source="n1"/>
+      <Param attrib="4" source="n1"/>
+      <Param attrib="5" source="n1"/>
+      <Param attrib="6" source="n1"/>
+      <Param attrib="7" source="n1"/>
+      <Param attrib="8" source="n1"/>
+      <Param attrib="9" source="n1"/>
+    </Node>
+  </Nodes>
+  <Links>
+    <Link source="n1" target="n2">
+      <true/>
+    </Link>
+    <Link source="n1" target="n3">
+      <true/>
+    </Link>
+    <Link source="n2" target="n4">
+      <true/>
+    </Link>
+    <Link source="n2" target="n5">
+      <true/>
+    </Link>
+    <Link source="n4" target="n6">
+      <true/>
+    </Link>
+    <Link source="n4" target="n7">
+      <true/>
+    </Link>
+    <Link source="n6" target="n8">
+      <true/>
+    </Link>
+  </Links>
+</Model>
