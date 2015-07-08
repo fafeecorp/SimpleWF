@@ -14,11 +14,16 @@ import java.util.List;
 public class database {
     //private final String dbName = "ROOT";   
     private Connection con = null;  
-    private static final String dbURL = "jdbc:derby://localhost:1527/test;create=true;user=root;password=root";
+    private String dbURL = "jdbc:derby://localhost:1527/test;create=true;user=root;password=root";
    
     public database() throws SQLException, ClassNotFoundException {
         Class.forName("org.apache.derby.jdbc.ClientDriver");
-        con = DriverManager.getConnection(dbURL);
+        con = DriverManager.getConnection(this.dbURL);
+    }
+    public database(String dbURL) throws SQLException, ClassNotFoundException {
+       this.dbURL = dbURL;
+       Class.forName("org.apache.derby.jdbc.ClientDriver");
+       con = DriverManager.getConnection(this.dbURL);
     }
     
     //TÁBLÁK LÉRTEHOZÁSA
@@ -83,44 +88,74 @@ public class database {
             "FOREIGN KEY (NODE_ID) REFERENCES " +
             "NODE (NODE_ID))";
         
+        String checkIfTableExists = "SELECT TABLENAME FROM SYS.SYSTABLES";
+        List<String> tables = new ArrayList<>();
         try {
             stmt = con.createStatement();
-            stmt.executeUpdate(createDocTypeTable);
-        } catch (SQLException e) {
-            System.out.println("CREATE TABLE (DOCTYPE) "+ e.toString());
-        } finally {
-            try {
-               stmt.executeUpdate(createNodeTable);
-            } catch (SQLException e) {
-               System.out.println("CREATE TABLE (NODE) "+ e.toString());
-            } finally {
-                try {
-                    stmt.executeUpdate(createConstTable);
-                } catch (SQLException e) {
-                    System.out.println("CREATE TABLE (CONSTANTS) "+ e.toString());
-                } finally {
-                    try {
-                        stmt.executeUpdate(createLinkTable);
-                    } catch (SQLException e) {
-                        System.out.println("CREATE TABLE (LINK) "+ e.toString());
-                    } finally {
-                        try {
-                            stmt.executeUpdate(createAttributeTable);   
-                        } catch (SQLException e) {
-                            System.out.println("CREATE TABLE (ATTRIBUTE) "+ e.toString());
-                        } finally {
-                            try {
-                               stmt.executeUpdate(createParamTable);
-                            } catch (SQLException e) {
-                               System.out.println("CREATE TABLE (PARAM) "+ e.toString());
-                            } finally {
-                                if (stmt != null) { stmt.close(); }
-                            }
-                        }
-                    }
-                }
+            ResultSet rs = stmt.executeQuery(checkIfTableExists);
+            while (rs.next()) {
+                tables.add(rs.getString("TABLENAME"));
+                //System.out.println(rs.getString("TABLENAME"));
             }
+        } catch (SQLException e ) {
+            System.out.println("READ SYSTABLES ERROR " + e);
+        } finally {
+            if (stmt != null) { stmt.close(); }
         }
+        
+        try{
+            stmt = con.createStatement();
+            boolean dtexists = tables.contains("DOCTYPE");
+            boolean nodeexists = tables.contains("NODE");
+            boolean constexists = tables.contains("CONSTANTS");
+            boolean linkexists = tables.contains("LINK");
+            boolean attribexists = tables.contains("ATTRIB");
+            boolean paramexists = tables.contains("PARAM");
+            
+            if(!dtexists){
+                stmt.executeUpdate(createDocTypeTable);
+            }
+            if(!nodeexists){
+                stmt.executeUpdate(createNodeTable);
+            }
+            if(!constexists){
+                stmt.executeUpdate(createConstTable);
+            }
+            if(!linkexists){
+                stmt.executeUpdate(createLinkTable);
+            }
+            if(!attribexists){
+                stmt.executeUpdate(createAttributeTable);   
+            }
+            if(!paramexists){
+                stmt.executeUpdate(createParamTable);
+            }
+            
+            //Törli a táblák tartalmát ha léteznek
+            if(paramexists){
+                stmt.executeUpdate("DELETE FROM PARAM");
+            }   
+            if(constexists){
+                stmt.executeUpdate("DELETE FROM CONSTANTS");
+            }
+            if(attribexists){
+                stmt.executeUpdate("DELETE FROM ATTRIB");
+            }
+            if(linkexists){
+                stmt.executeUpdate("DELETE FROM LINK");
+            }
+            if(nodeexists){
+                stmt.executeUpdate("DELETE FROM NODE");
+            }
+            if(dtexists){
+                stmt.executeUpdate("DELETE FROM DOCTYPE");
+            }
+        } catch (SQLException e) {
+            System.out.println("CREATE TABLE ERROR "+ e.toString());
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+        
     }
        
     //TÁBLÁK MEGNÉZÉSE
