@@ -24,11 +24,11 @@ public class docType{
     public docType(docType o){
         this.ID = o.getID();
         this.Name = o.getName(); 
-        /*Attribs = new ArrayList<>();
-        for (Attrib Attrib : o.Attribs) {
-            Attribs.add(new Attrib(Attrib));
-        }*/
-        this.Attribs = o.getAttribs();
+        Attribs = new ArrayList<>();
+        for (Attrib Attrib : o.getAttribs()) {
+            this.Attribs.add(new Attrib(Attrib));
+        }
+        //this.Attribs = o.getAttribs();
         
     }
     public int getAttribIndex(Attrib a){
